@@ -12,6 +12,7 @@ https://design1096.github.io/kadai03_memo/
 
 ## ④工夫した点・こだわった点
 - CSSにbootstrapを使用した点
+- localStorageにJSON形式でデータを保存した点
 
 ## ⑤難しかった点・次回トライしたいこと(又は機能)
 - 交通費が自動で算出されるapiが使えそうだったら使ってみたい（駅すぱあとAPIの申請はしてみました）
