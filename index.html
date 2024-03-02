@@ -16,8 +16,14 @@
     <!-- メイン  -->
     <main>
         <form class="row g-3 was-validated">
+            <!-- 日付テキストボックス -->
+            <div class="col-md-3" id="">
+                <label for="expense_day" class="form-label">日付</label>
+                <input type="date" class="form-control" id="expense_day" required>
+                <div class="invalid-feedback">入力してください</div>
+            </div>
             <!-- 経費種別プルダウン -->
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <label for="expense_type" class="form-label">経費種別</label>
                 <select id="expense_type" class="form-select" required>
                     <option selected disabled value="">-- 選択してください --</option>
@@ -27,13 +33,13 @@
                 <div class="invalid-feedback">選択してください</div>
             </div>
             <!-- その他の場合テキストボックス -->
-            <div class="col-md-6" id="type_text_area">
+            <div class="col-md-3" id="type_text_area">
                 <label for="type_text" class="form-label">種別名</label>
                 <input type="text" class="form-control" id="type_text" required>
                 <div class="invalid-feedback">入力してください</div>
             </div>
             <!-- 金額テキストボックス -->
-            <div class="col-md-4" id="">
+            <div class="col-md-3" id="">
                 <label for="price_number" class="form-label">金額</label>
                 <input type="number" class="form-control" id="price_number" required>
                 <div class="invalid-feedback">入力してください</div>
@@ -46,12 +52,24 @@
             <table class="table">
                 <thead class="table-primary">
                   <tr>
-                    <th scope="col-3">#</th>
-                    <th scope="col-3">経費種別</th>
-                    <th scope="col-3">金額</th>
+                    <th scope="col">#</th>
+                    <th scope="col">日付</th>
+                    <th scope="col">経費種別</th>
+                    <th scope="col">金額</th>
                   </tr>
                 </thead>
                 <tbody id="expense_table">
+                </tbody>
+            </table>
+            <!-- 合計金額テーブル -->
+            <table class="table" style="width: 50%;">
+                <thead class="table-secondary">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">合計金額</th>
+                  </tr>
+                </thead>
+                <tbody id="total_table">
                 </tbody>
             </table>
             <!-- クリアボタン -->
