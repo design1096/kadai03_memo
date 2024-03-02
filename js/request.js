@@ -42,14 +42,14 @@ $('#application_btn').on('click', function() {
   if (CheckForm(day, selected, other, price)) {
     // 経費種別取得
   let type = GetExpenseType(selected, other);
-  // 金額取得
-  let price_total = GetExpenseTotalPrice(price);
   // 申請ボタン押下回数取得
   let num = GetClickExpenseBtnNum();
+  // 合計JSON取得
+  let total_json = JSON.parse(GetTotal(type, price));
   // 経費テーブルのtbodyを作成
   CreateExpenseTbody(day, type, price, num);
-  // 合計金額テーブルのtbodyを作成
-  CreateTotalTbody(price_total);
+  // 合計テーブルのtbodyを作成
+  CreateTotalTbody(total_json);
   }
 });
 
@@ -58,8 +58,12 @@ $('#clear_btn').on('click', function() {
   localStorage.clear();
   let expense_table = document.getElementById("expense_table");
   expense_table.innerHTML = "";
-  let total_table = document.getElementById("total_table");
-  total_table.innerHTML = "";
+  let trans_price = document.getElementById("trans_price");
+  trans_price.innerText = "";
+  let other_price = document.getElementById("other_price");
+  other_price.innerText = "";
+  let total_price = document.getElementById("total_price");
+  total_price.innerText = "";
   let expense_day = document.getElementById("expense_day");
   expense_day.value = "";
   let expense_type = document.getElementById("expense_type");
@@ -81,21 +85,41 @@ function GetClickExpenseBtnNum(){
 // 経費種別処理
 function GetExpenseType(selected, other){
   if (selected == '1') {
-    localStorage.setItem('経費種別', '交通費');
-    return localStorage.getItem('経費種別');
+    return '交通費';
   } else if (selected == '2') {
-    localStorage.setItem('経費種別', other);
-    return localStorage.getItem('経費種別');
+    return other;
   } else {
     return "";
   }
 }
 
-// 合計金額取得処理
-function GetExpenseTotalPrice(price){
-  let num = Number(localStorage.getItem('金額'));
-  localStorage.setItem('金額', String(num + Number(price)));
-  return localStorage.getItem('金額');
+// 合計取得処理
+function GetTotal(type, price){
+  let json_str = '{"交通費":"","その他":"","合計金額":""}';
+  let total_str = localStorage.getItem('合計');
+  if (total_str == null) {
+    let obj = JSON.parse(json_str);
+    if (type == '交通費') {
+      obj.交通費 = price;
+    } else {
+      obj.その他 = price;
+    }
+    obj.合計金額 = price;
+    localStorage.setItem('合計', JSON.stringify(obj));
+  } else {
+    let total_obj = JSON.parse(total_str);
+    if (type == '交通費') {
+      let trans_price = Number(total_obj.交通費);
+      total_obj.交通費 = String(trans_price + Number(price));
+    } else {
+      let other_price = Number(total_obj.その他);
+      total_obj.その他 = String(other_price + Number(price));
+    }
+    let total_price = Number(total_obj.合計金額);
+    total_obj.合計金額 = String(total_price + Number(price));
+    localStorage.setItem('合計', JSON.stringify(total_obj));
+  }
+  return localStorage.getItem('合計');
 }
 
 // 経費テーブルのtbodyを作成
@@ -103,7 +127,15 @@ function CreateExpenseTbody(day, type, price, num){
   $('#expense_table').append('<tr id="tr_' +  num + '"><th scope="row">' + num + '</th><td>' + day + '</td><td>' + type + '</td><td>' + price + '円</td></tr>');
 }
 
-// 合計金額テーブルのtbodyを作成
-function CreateTotalTbody(price_total){
-  $('#total_table').html('<tr><th scope="row"></th><td>' + price_total + '円</td></tr>');
+// 合計テーブルのtbodyを作成
+function CreateTotalTbody(total_json){
+  if (total_json.交通費 != "") {
+    $('#trans_price').text(total_json.交通費 + '円');
+  }
+  if (total_json.その他 != "") {
+    $('#other_price').text(total_json.その他 + '円');
+  }
+  if (total_json.合計金額 != "") {
+    $('#total_price').text(total_json.合計金額 + '円');
+  }
 }
